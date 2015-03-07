@@ -1,8 +1,6 @@
-import os
 from firebase import firebase
 import requests
-from twilio.rest import TwilioRestClient
-from config import fbRef, twilio_acc_id, twilio_acc_auth_token, twilio_number
+from config import fbRef
 
 FIREBASE = firebase.FirebaseApplication(fbRef, None)
 
@@ -12,20 +10,10 @@ def change_occupied_state(state):
 		#toilet is now unoccupied
 		FIREBASE.put('/', 'occupied', 'false')
 		#send text to next person in the queue
-		get_next_in_queue()
+		#get_next_in_queue()
 	else:
 		#toilet is now occupied 
 		FIREBASE.put('/', 'occupied', 'true')
-
-# sends text to next in queue
-def send_text(number, name):
-	# Your Account Sid and Auth Token from twilio.com/user/account
-	client = TwilioRestClient(twilio_acc_id, twilio_acc_auth_token)
-	message = client.messages.create(body=name + " the toilet is now open!",
-	    to= number,    # Replace with your phone number
-	    from_=twilio_number) # Replace with your Twilio number
-	print "text sent"
-
 
 # gets next in queue
 def get_next_in_queue():
@@ -45,7 +33,5 @@ def get_next_in_queue():
 	else:
 		name = person['name']
 		number = os.getenv(name)
-		# send text
-		send_text(number, name)
 		# delete entry
 		FIREBASE.delete('/queue', key)
