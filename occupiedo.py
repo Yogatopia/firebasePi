@@ -9,11 +9,12 @@ def change_occupied_state(state):
 	if state == 0:
 		#toilet is now unoccupied
 		FIREBASE.put('/', 'occupied', 'false')
-		#send text to next person in the queue
-		#get_next_in_queue()
+		print('Set green')
+		get_next_in_queue()
 	else:
 		#toilet is now occupied 
 		FIREBASE.put('/', 'occupied', 'true')
+		print('Set red')
 
 # gets next in queue
 def get_next_in_queue():
@@ -29,9 +30,9 @@ def get_next_in_queue():
 	
 	# check if anyone is in queue
 	if person == None:
-		print "no one in queue"
+		print ("no one in queue")
 	else:
 		name = person['name']
-		number = os.getenv(name)
+		#number = os.getenv(name)
 		# delete entry
 		FIREBASE.delete('/queue', key)
